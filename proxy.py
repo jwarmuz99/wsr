@@ -91,6 +91,7 @@ class Proxy(object):
 
     def cleanup_socket(self, s):
         try:
+            self.log.info("closing socket")
             self.selector.unregister(s)
         except KeyError:
             self.log.error("socket was not registered, wtf?")

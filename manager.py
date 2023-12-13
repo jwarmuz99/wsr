@@ -71,6 +71,7 @@ class Manager:
                     self.log.info("setting difficulty to %s" % (self.difficulty))
 
                 elif jmsg["method"] == "mining.submit" and ("params" and "id" in jmsg):
+                    self.log.info("received mining.submit message")
                     jid = jmsg["params"][1]
                     if jid in self.jobs:
                         self.jobs[jid][1] += 1

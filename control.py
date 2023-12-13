@@ -64,6 +64,7 @@ class Control(object):
             self.reconnect_all()
 
     def get_shares(self):
+        self.log.info("getting shares")
         shares = {}
         response = {}
         for sh in self.shares.shares.keys():
