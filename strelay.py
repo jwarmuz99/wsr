@@ -169,19 +169,19 @@ while not shutdown:
                 if mask & selectors.EVENT_READ:
                     data = sock.recv(1024)  # Adjust buffer size as needed
                     if data:
-                        log.log(f"Received data in else: {data}")
+                        print(f"Received data in else: {data}")
                         # Process the received data from the miner and forward it to the pool
                         # This part will depend on your specific implementation
                         pass
                     else:
                         # No data means the connection has been closed
-                        log.log("No data in else, closing connection")
+                        print("No data in else, closing connection")
                         sel.unregister(sock)
                         sock.close()
                 if mask & selectors.EVENT_WRITE:
                     # If there's data to send back to the miner, handle it here
                     # This also depends on your implementation
-                    log.log("There's data to send back to the miner")
+                    print("There's data to send back to the miner")
                     pass
             except Exception as e:
                 # Handle any exceptions during read/write operations
