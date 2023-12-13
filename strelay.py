@@ -140,7 +140,12 @@ sel.register(server_listen, selectors.EVENT_READ)
 while not shutdown:
     events = sel.select()
     for key, mask in events:
-        if key.fileobj == server_listen:
+        sock = key.fileobj
+        if sock.fileno() == -1:
+            # The socket is not valid; skip to the next one
+            continue
+
+        if sock == server_listen:
             # Accept new connection
             client_socket, address = server_listen.accept()
             client_socket.setblocking(False)  # Set non-blocking
@@ -158,3 +163,7 @@ while not shutdown:
             t.daemon = True
             t.start()
             proxies.add_proxy(proxy, t)
+        else:
+            print("NEEDS TO HANDLE THE EXISTING CONNECTION")
+            # Handle existing connection...
+            # Make sure to include error handling for operations on `sock`
