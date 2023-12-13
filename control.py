@@ -9,14 +9,14 @@ import proxy
 
 
 class Control(object):
-
     poolmap = {
         "pool": "stratum.nicehash.com",
         "port": 3333,
         "user": None,
         "pass": "x",
         "backup": "us.clevermining.com",
-        "backup_port": "3333"}
+        "backup_port": "3333",
+    }
 
     def __init__(self, proxydb=None, sharestats=None):
         self.proxies = proxydb
@@ -55,7 +55,7 @@ class Control(object):
 
     def set_pool(self, pool, port, user=None, passw=None, force=False):
         self.poolmap["pool"] = pool
-        self.poolmap['port'] = int(port)
+        self.poolmap["port"] = int(port)
         if user:
             self.poolmap["user"] = user
         if passw:
@@ -69,26 +69,26 @@ class Control(object):
         for sh in self.shares.shares.keys():
             acc, rej = self.shares.shares[sh]
             if acc + rej > 0:
-                shares[sh] = {'accepted': acc, 'rejected': rej}
-        self.log.debug('Shares sent: %s' % shares)
-        response['shares'] = shares
-        response['error'] = False
+                shares[sh] = {"accepted": acc, "rejected": rej}
+        self.log.debug("Shares sent: %s" % shares)
+        response["shares"] = shares
+        response["error"] = False
         for sh in shares.keys():
             if sh in self.rm_shares:
-                self.rm_shares[sh]['accepted'] += shares[sh]['accepted']
-                self.rm_shares[sh]['rejected'] += shares[sh]['rejected']
+                self.rm_shares[sh]["accepted"] += shares[sh]["accepted"]
+                self.rm_shares[sh]["rejected"] += shares[sh]["rejected"]
             else:
                 self.rm_shares[sh] = shares[sh]
         return json.dumps(response, ensure_ascii=True)
 
     def clean_shares(self):
         response = {}
-        self.log.debug('shares to remove: %s' % self.rm_shares)
+        self.log.debug("shares to remove: %s" % self.rm_shares)
         for sh in self.rm_shares.keys():
-            self.shares.shares[sh][0] -= self.rm_shares[sh]['accepted']
-            self.shares.shares[sh][1] -= self.rm_shares[sh]['rejected']
+            self.shares.shares[sh][0] -= self.rm_shares[sh]["accepted"]
+            self.shares.shares[sh][1] -= self.rm_shares[sh]["rejected"]
         self.rm_shares = {}
-        response['error'] = False
+        response["error"] = False
         return json.dumps(response, ensure_ascii=True)
 
     def start(self):
@@ -99,7 +99,7 @@ class Control(object):
             data = command.recv(2048).decode()
             try:
                 jdata = json.loads(data.replace("'", '"'))
-                query = jdata['query']
+                query = jdata["query"]
                 execute = True
             except:
                 self.log.error("cannot understand control command: %s" % data)
@@ -114,14 +114,13 @@ class Control(object):
                     response = self.clean_shares()
 
                 elif query == "getinfo":
-                    response = json.dumps(
-                        str(self.get_info()), ensure_ascii=True)
+                    response = json.dumps(str(self.get_info()), ensure_ascii=True)
 
-                elif query == 'setpool':
-                    host = jdata['host'] if 'host' in jdata else None
-                    port = jdata['port'] if 'port' in jdata else None
-                    user = jdata['user'] if 'user' in jdata else None
-                    passw = jdata['passw'] if 'passw' in jdata else None
+                elif query == "setpool":
+                    host = jdata["host"] if "host" in jdata else None
+                    port = jdata["port"] if "port" in jdata else None
+                    user = jdata["user"] if "user" in jdata else None
+                    passw = jdata["passw"] if "passw" in jdata else None
                     response = str({"error": False})
                     if host and port and user and passw:
                         self.set_pool(host, port, user=user, passw=passw)
@@ -134,7 +133,7 @@ class Control(object):
 
                     self.reconnect_all()
 
-                elif query == 'setbackup':
+                elif query == "setbackup":
                     pass
 
                 else:

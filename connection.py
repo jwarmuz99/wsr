@@ -2,11 +2,11 @@ import socket
 import log
 import manager
 import time
+
 dns = {}
 
 
-class Client():
-
+class Client:
     def __init__(self, host, port):
         global dns
         self.host = host
@@ -29,20 +29,18 @@ class Client():
         self.conn.close()
 
 
-class Server():
-
+class Server:
     def __init__(self, host, port):
         self.host = host
         self.port = int(port)
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.conn.setblocking(1)
         self.conn.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.log = log.Log('listener')
+        self.log = log.Log("listener")
         self.conn.bind((self.host, self.port))
 
     def listen(self):
-        self.log.info('waiting for new connections on %s:%s' %
-                      (self.host, self.port))
+        self.log.info("waiting for new connections on %s:%s" % (self.host, self.port))
         self.conn.listen(100)
         try:
             current_conn, addr = self.conn.accept()
