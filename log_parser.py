@@ -61,4 +61,4 @@ args = parse_args()
 print(args)
 
 # Call the function with the user-provided paths
-parse_log_file(args["log_path"], args["output_path"])
+parse_log_file(args.log_path, args.output_path)
